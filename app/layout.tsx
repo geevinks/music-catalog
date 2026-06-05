@@ -15,7 +15,7 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <Navigation />
-        <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px 40px' }}>
+        <main className="container mx-auto px-4 py-18">
           {children}
         </main>
       </body>

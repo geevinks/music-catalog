@@ -12,6 +12,8 @@ type Artist = {
 export default function ArtistsPage() {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hoveredArtistId, setHoveredArtistId] = useState<string | null>(null);
+  const [activeArtistId, setActiveArtistId] = useState<string | null>(null);
 
   const fetchArtists = async () => {
     const res = await fetch('/api/artists');
@@ -25,41 +27,65 @@ export default function ArtistsPage() {
   }, []);
 
   const deleteArtist = async (id: string) => {
-    if (!confirm('Удалить исполнителя?')) return;
-    await fetch(`/api/artists/${id}`, { method: 'DELETE' });
-    fetchArtists();
+    setActiveArtistId(id);
+    setTimeout(async () => {
+      if (!confirm('Удалить исполнителя?')) {
+        setActiveArtistId(null);
+        return;
+      }
+      await fetch(`/api/artists/${id}`, { method: 'DELETE' });
+      setActiveArtistId(null);
+      fetchArtists();
+    }, 200);
   };
 
-  if (loading) return <div>Загрузка...</div>;
+  if (loading) return <div className="text-center py-10">Загрузка...</div>;
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '32px' }}>Исполнители</h1>
-        <Link href="/artists/new" style={{ backgroundColor: '#3b82f6', color: 'white', padding: '10px 20px', borderRadius: '6px', textDecoration: 'none' }}>
-          + Новый исполнитель
-        </Link>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Исполнители</h1>
+        <Link href="/artists/new" className="bg-blue-600 text-white px-4 py-2 rounded">+ Новый</Link>
       </div>
 
-      <div style={{ display: 'grid', gap: '16px' }}>
-        {artists.map(artist => (
-          <div key={artist.id} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <Link href={`/artists/${artist.id}`} style={{ fontSize: '20px', fontWeight: 'bold', textDecoration: 'none', color: '#3b82f6' }}>
-                {artist.name}
-              </Link>
-              <p style={{ color: '#666', marginTop: '4px' }}>{artist.country} • {artist.isActive ? 'Активен' : 'Не активен'}</p>
+      <div className="space-y-3">
+        {artists.map(artist => {
+          const isHovered = hoveredArtistId === artist.id;
+          const isActive = activeArtistId === artist.id;
+          
+          return (
+            <div key={artist.id} className="relative rounded overflow-hidden bg-gray-200">
+              <div
+                className="absolute top-0 right-0 h-full pointer-events-none transition-all duration-300"
+                style={{
+                  width: isActive ? '100%' : (isHovered ? '50%' : '0%'),
+                  background: 'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgb(230,30,30) 100%)',
+                }}
+              />
+              <div className="relative z-10 p-4 flex justify-between items-center">
+                <div>
+                  <Link href={`/artists/${artist.id}`} className="text-xl font-semibold text-blue-600">
+                    {artist.name}
+                  </Link>
+                  <p className="text-gray-600">{artist.country} • {artist.isActive ? 'Активен' : 'Не активен'}</p>
+                </div>
+                <div className="space-x-2 flex">
+                  <Link href={`/artists/${artist.id}/edit`} className="w-8 h-8 rounded-lg border border-gray-300 bg-gray-200 flex items-center justify-center">
+                    ✏️
+                  </Link>
+                  <button 
+                    onMouseEnter={() => setHoveredArtistId(artist.id)}
+                    onMouseLeave={() => setHoveredArtistId(null)}
+                    onClick={() => deleteArtist(artist.id)} 
+                    className="w-8 h-8 rounded-lg border border-gray-300 bg-gray-200"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <Link href={`/artists/${artist.id}/edit`} style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', textDecoration: 'none', color: '#333' }}>
-                ✏️
-              </Link>
-              <button onClick={() => deleteArtist(artist.id)} style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: 'white', cursor: 'pointer' }}>
-                🗑️
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
