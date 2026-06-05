@@ -80,6 +80,8 @@ export default function AlbumDetailPage() {
         </div>
       </div>
       
+      {album.coverPath && <img src={album.coverPath} alt={album.title} style={{ width: '200px' }} />}
+      
       <p>Исполнитель: {artistName}</p>
       <p>Год: {album.releaseYear}</p>
       <p>Жанр: {album.genre}</p>
@@ -94,11 +96,16 @@ export default function AlbumDetailPage() {
         ) : (
           <div>
             {tracks.map((track, idx) => (
-              <div key={track.id}>
-                <div>
+              <div key={track.id} style={{ borderBottom: '1px solid #ccc', padding: '8px 0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>{idx + 1}. {track.title}</span>
                   <button onClick={() => handleDeleteTrack(track.id)}>🗑️</button>
                 </div>
+                {track.audioPath && (
+                  <audio controls src={track.audioPath} style={{ width: '100%', marginTop: '8px' }}>
+                    <source src={track.audioPath} type="audio/mpeg" />
+                  </audio>
+                )}
               </div>
             ))}
           </div>

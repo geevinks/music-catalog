@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import FileUpload from '@/app/components/FileUpload';
 
 type Album = {
   id: string;
@@ -31,7 +32,7 @@ export default function NewTrackPage() {
     setError('');
 
     if (!audioPath) {
-      setError('URL аудиофайла обязателен');
+      setError('Загрузите аудиофайл');
       setLoading(false);
       return;
     }
@@ -58,35 +59,19 @@ export default function NewTrackPage() {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Название трека *</label>
-          <input
-            type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div>
           <label>Альбом *</label>
-          <select
-            required
-            value={albumId}
-            onChange={(e) => setAlbumId(e.target.value)}
-          >
+          <select required value={albumId} onChange={(e) => setAlbumId(e.target.value)}>
             <option value="">Выберите альбом</option>
-            {albums.map(a => (
-              <option key={a.id} value={a.id}>{a.title}</option>
-            ))}
+            {albums.map(a => <option key={a.id} value={a.id}>{a.title}</option>)}
           </select>
         </div>
         <div>
-          <label>Путь к аудиофайлу *</label>
-          <input
-            type="text"
-            required
-            placeholder="/uploads/audio/song.mp3"
-            value={audioPath}
-            onChange={(e) => setAudioPath(e.target.value)}
-          />
+          <label>Аудиофайл *</label>
+          <FileUpload type="audio" onUpload={setAudioPath} label="Загрузить MP3" />
+          {audioPath && <audio controls src={audioPath} style={{ marginTop: '8px', width: '100%' }} />}
         </div>
         <button type="submit" disabled={loading}>
           {loading ? 'Добавление...' : 'Добавить'}
