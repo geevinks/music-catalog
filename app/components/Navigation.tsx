@@ -9,6 +9,7 @@ export default function Navigation() {
         <nav>
           <Link href="/artists">Исполнители</Link>
           <Link href="/albums">Альбомы</Link>
+          <Link href="/tracks/new">Добавить трек</Link>
         </nav>
       </div>
     </header>

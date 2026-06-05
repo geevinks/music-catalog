@@ -14,7 +14,17 @@ export type Album = {
   releaseYear: number;
   genre: string;
   artistId: string;
+  coverPath: string | null;
   isStudio: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Track = {
+  id: string;
+  title: string;
+  albumId: string;
+  audioPath: string;
   createdAt: string;
   updatedAt: string;
 };

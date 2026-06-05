@@ -1,4 +1,4 @@
-import { Artist, Album } from './types';
+import { Artist, Album, Track } from './types';
 import fs from 'fs';
 import path from 'path';
 
@@ -20,8 +20,15 @@ const seedAlbums: Omit<Album, 'createdAt' | 'updatedAt'>[] = [
   { id: '5', title: 'Сделай шаг', releaseYear: 2002, genre: 'Pop', artistId: '4', coverPath: null, isStudio: true },
 ];
 
+const seedTracks: Omit<Track, 'createdAt' | 'updatedAt'>[] = [
+  { id: '1', title: 'Я русский', albumId: '1', audioPath: '' },
+  { id: '2', title: 'Встаем', albumId: '1', audioPath: '' },
+  { id: '3', title: 'Эскадрон', albumId: '2', audioPath: '' },
+];
+
 export let artists: Artist[] = [];
 export let albums: Album[] = [];
+export let tracks: Track[] = [];
 
 function loadData() {
   try {
@@ -29,12 +36,13 @@ function loadData() {
       const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
       artists = data.artists || [];
       albums = data.albums || [];
+      tracks = data.tracks || [];
     }
   } catch (e) {}
 }
 
 function saveData() {
-  fs.writeFileSync(DATA_FILE, JSON.stringify({ artists, albums }, null, 2));
+  fs.writeFileSync(DATA_FILE, JSON.stringify({ artists, albums, tracks }, null, 2));
 }
 
 export function initStore() {
@@ -43,6 +51,7 @@ export function initStore() {
     const now = new Date().toISOString();
     artists = seedArtists.map(a => ({ ...a, createdAt: now, updatedAt: now }));
     albums = seedAlbums.map(a => ({ ...a, createdAt: now, updatedAt: now }));
+    tracks = seedTracks.map(t => ({ ...t, createdAt: now, updatedAt: now }));
     saveData();
   }
 }
@@ -58,5 +67,10 @@ export const addAlbum = (a: Album) => { albums.push(a); saveData(); };
 export const updateAlbum = (i: number, a: Album) => { albums[i] = a; saveData(); };
 export const deleteAlbum = (i: number) => { albums.splice(i, 1); saveData(); };
 export const findAlbum = (id: string) => albums.find(a => a.id === id);
+
+// CRUD для треков
+export const addTrack = (t: Track) => { tracks.push(t); saveData(); };
+export const deleteTrack = (i: number) => { tracks.splice(i, 1); saveData(); };
+export const findTrack = (id: string) => tracks.find(t => t.id === id);
 
 initStore();
