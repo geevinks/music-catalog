@@ -15,7 +15,9 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <Navigation />
-        <main>{children}</main>
+        <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px 40px' }}>
+          {children}
+        </main>
       </body>
     </html>
   );

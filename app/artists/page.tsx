@@ -34,20 +34,29 @@ export default function ArtistsPage() {
 
   return (
     <div>
-      <div>
-        <h1>Исполнители</h1>
-        <Link href="/artists/new">+ Новый</Link>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '32px' }}>Исполнители</h1>
+        <Link href="/artists/new" style={{ backgroundColor: '#3b82f6', color: 'white', padding: '10px 20px', borderRadius: '6px', textDecoration: 'none' }}>
+          + Новый исполнитель
+        </Link>
       </div>
-      <div>
+
+      <div style={{ display: 'grid', gap: '16px' }}>
         {artists.map(artist => (
-          <div key={artist.id}>
+          <div key={artist.id} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <Link href={`/artists/${artist.id}`}>{artist.name}</Link>
-              <p>{artist.country}</p>
+              <Link href={`/artists/${artist.id}`} style={{ fontSize: '20px', fontWeight: 'bold', textDecoration: 'none', color: '#3b82f6' }}>
+                {artist.name}
+              </Link>
+              <p style={{ color: '#666', marginTop: '4px' }}>{artist.country} • {artist.isActive ? 'Активен' : 'Не активен'}</p>
             </div>
-            <div>
-              <Link href={`/artists/${artist.id}/edit`}>✏️</Link>
-              <button onClick={() => deleteArtist(artist.id)}>🗑️</button>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <Link href={`/artists/${artist.id}/edit`} style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', textDecoration: 'none', color: '#333' }}>
+                ✏️
+              </Link>
+              <button onClick={() => deleteArtist(artist.id)} style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: 'white', cursor: 'pointer' }}>
+                🗑️
+              </button>
             </div>
           </div>
         ))}
