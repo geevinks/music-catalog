@@ -1,0 +1,106 @@
+{
+  "artists": [
+    {
+      "id": "1",
+      "name": "SHAMAN",
+      "country": "Россия",
+      "birthYear": 1991,
+      "isActive": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    },
+    {
+      "id": "2",
+      "name": "Любэ",
+      "country": "Россия",
+      "birthYear": 1989,
+      "isActive": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    },
+    {
+      "id": "3",
+      "name": "Олег Газманов",
+      "country": "Россия",
+      "birthYear": 1951,
+      "isActive": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    },
+    {
+      "id": "4",
+      "name": "Григорий Лепс",
+      "country": "Россия",
+      "birthYear": 1962,
+      "isActive": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    },
+    {
+      "id": "5",
+      "name": "Полина Гагарина",
+      "country": "Россия",
+      "birthYear": 1987,
+      "isActive": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    }
+  ],
+  "albums": [
+    {
+      "id": "1",
+      "title": "Сделано в России",
+      "releaseYear": 2023,
+      "genre": "Pop",
+      "artistId": "1",
+      "coverPath": null,
+      "isStudio": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    },
+    {
+      "id": "2",
+      "title": "Эскадрон",
+      "releaseYear": 1991,
+      "genre": "Pop",
+      "artistId": "3",
+      "coverPath": null,
+      "isStudio": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    },
+    {
+      "id": "3",
+      "title": "Комбат",
+      "releaseYear": 1995,
+      "genre": "Rock",
+      "artistId": "2",
+      "coverPath": null,
+      "isStudio": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    },
+    {
+      "id": "4",
+      "title": "Давай за...",
+      "releaseYear": 1998,
+      "genre": "Rock",
+      "artistId": "2",
+      "coverPath": null,
+      "isStudio": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    },
+    {
+      "id": "5",
+      "title": "Сделай шаг",
+      "releaseYear": 2002,
+      "genre": "Pop",
+      "artistId": "4",
+      "coverPath": null,
+      "isStudio": true,
+      "createdAt": "2026-06-05T18:01:06.763Z",
+      "updatedAt": "2026-06-05T18:01:06.763Z"
+    }
+  ]
+}
