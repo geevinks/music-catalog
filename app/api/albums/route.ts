@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { albums, findArtist } from '@/lib/store';
+import { albums, addAlbum, findArtist } from '@/lib/store';
+import crypto from 'crypto';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -27,4 +28,31 @@ export async function GET(req: NextRequest) {
     page,
     pages: Math.ceil(filtered.length / limit)
   });
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  
+  if (!body.title || !body.releaseYear || !body.genre || !body.artistId) {
+    return NextResponse.json({ error: 'Все поля обязательны' }, { status: 422 });
+  }
+  
+  if (!findArtist(body.artistId)) {
+    return NextResponse.json({ error: 'Исполнитель не найден' }, { status: 422 });
+  }
+  
+  const newAlbum = {
+    id: crypto.randomUUID(),
+    title: body.title,
+    releaseYear: body.releaseYear,
+    genre: body.genre,
+    artistId: body.artistId,
+    coverPath: body.coverPath || null,
+    isStudio: body.isStudio ?? true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  
+  addAlbum(newAlbum);
+  return NextResponse.json(newAlbum, { status: 201 });
 }
