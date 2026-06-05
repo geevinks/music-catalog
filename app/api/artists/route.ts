@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { artists } from '@/lib/store';
+import { artists, addArtist } from '@/lib/store';
+import crypto from 'crypto';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -20,4 +21,25 @@ export async function GET(req: NextRequest) {
     page,
     pages: Math.ceil(filtered.length / limit)
   });
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  
+  if (!body.name || !body.country) {
+    return NextResponse.json({ error: 'Имя и страна обязательны' }, { status: 422 });
+  }
+  
+  const newArtist = {
+    id: crypto.randomUUID(),
+    name: body.name,
+    country: body.country,
+    birthYear: body.birthYear || null,
+    isActive: body.isActive ?? true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  
+  addArtist(newArtist);
+  return NextResponse.json(newArtist, { status: 201 });
 }
