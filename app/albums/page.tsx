@@ -9,6 +9,7 @@ type Album = {
   genre: string;
   artistName: string;
   artistId: string;
+  coverPath: string | null;
 };
 
 type Artist = {
@@ -21,16 +22,26 @@ export default function AlbumsPage() {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [artistId, setArtistId] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams({
       page: String(page),
       limit: '5',
-      ...(search && { search }),
+      ...(debouncedSearch && { search: debouncedSearch }),
       ...(artistId && { artistId })
     });
     
@@ -46,7 +57,7 @@ export default function AlbumsPage() {
     setTotalPages(albumsData.pages);
     setArtists(artistsData.items);
     setLoading(false);
-  }, [page, search, artistId]);
+  }, [page, debouncedSearch, artistId]);
 
   useEffect(() => {
     fetchData();
@@ -58,63 +69,70 @@ export default function AlbumsPage() {
     fetchData();
   };
 
-  if (loading) return <div>Загрузка...</div>;
+  if (loading) return <div className="text-center py-10">Загрузка...</div>;
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '32px' }}>Альбомы</h1>
-        <Link href="/albums/new" style={{ backgroundColor: '#3b82f6', color: 'white', padding: '10px 20px', borderRadius: '6px', textDecoration: 'none' }}>
-          + Новый альбом
-        </Link>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Альбомы</h1>
+        <Link href="/albums/new" className="bg-blue-600 text-white px-4 py-2 rounded">+ Новый</Link>
       </div>
 
-      <div style={{ display: 'grid', gap: '16px', marginBottom: '24px' }}>
+      <div className="bg-white p-4 rounded shadow mb-6 grid md:grid-cols-2 gap-4">
         <input
           type="text"
-          placeholder="Поиск по названию..."
+          placeholder="Поиск..."
+          className="border p-2 rounded"
           value={search}
-          onChange={e => { setSearch(e.target.value); setPage(1); }}
-          style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '6px' }}
+          onChange={e => setSearch(e.target.value)}
         />
         <select
+          className="border p-2 rounded"
           value={artistId}
           onChange={e => { setArtistId(e.target.value); setPage(1); }}
-          style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '6px' }}
         >
           <option value="">Все исполнители</option>
           {artists.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
         </select>
       </div>
 
-      <div style={{ display: 'grid', gap: '16px' }}>
+      <div className="space-y-3">
         {albums.map(album => (
-          <div key={album.id} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <Link href={`/albums/${album.id}`} style={{ fontSize: '18px', fontWeight: 'bold', textDecoration: 'none', color: '#3b82f6' }}>
-                {album.title}
-              </Link>
-              <p style={{ color: '#666', marginTop: '4px' }}>{album.artistName} • {album.releaseYear} • {album.genre}</p>
-            </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <Link href={`/albums/${album.id}/edit`} style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', textDecoration: 'none', color: '#333' }}>
-                ✏️
-              </Link>
-              <button onClick={() => deleteAlbum(album.id)} style={{ padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: 'white', cursor: 'pointer' }}>
-                🗑️
-              </button>
+          <div key={album.id} className="relative rounded overflow-hidden bg-gray-200">
+            <div className="p-4 flex items-center gap-4">
+              <div className="w-16 h-16 rounded flex items-center justify-center">
+                {album.coverPath ? (
+                  <img src={album.coverPath} alt={album.title} className="w-full h-full object-cover rounded" />
+                ) : (
+                  <img src="/logo.svg" alt="Logo" className="w-16 h-16 object-cover rounded" />
+                )}
+              </div>
+              <div className="flex-1">
+                <Link href={`/albums/${album.id}`} className="font-semibold text-blue-600">
+                  {album.title}
+                </Link>
+                <p className="text-sm text-gray-600">{album.artistName} • {album.releaseYear} • {album.genre}</p>
+              </div>
+              <div className="space-x-2 flex">
+                <Link href={`/albums/${album.id}/edit`} className="w-8 h-8 rounded-lg border border-gray-300 bg-gray-200 flex items-center justify-center">
+                  ✏️
+                </Link>
+                <button onClick={() => deleteAlbum(album.id)} className="w-8 h-8 rounded-lg border border-gray-300 bg-gray-200">
+                  🗑️
+                </button>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
       {totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '24px' }}>
-          <button onClick={() => setPage(p => p-1)} disabled={page === 1} style={{ padding: '8px 16px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: 'white', cursor: 'pointer' }}>
+        <div className="flex justify-center items-center gap-4 mt-6">
+          <button onClick={() => setPage(p => p-1)} disabled={page === 1} className="px-4 py-2 bg-gray-200 rounded">
             Назад
           </button>
-          <span style={{ padding: '8px 16px' }}>{page} / {totalPages}</span>
-          <button onClick={() => setPage(p => p+1)} disabled={page >= totalPages} style={{ padding: '8px 16px', border: '1px solid #ddd', borderRadius: '6px', backgroundColor: 'white', cursor: 'pointer' }}>
+          <span>{page} / {totalPages}</span>
+          <button onClick={() => setPage(p => p+1)} disabled={page >= totalPages} className="px-4 py-2 bg-gray-200 rounded">
             Вперёд
           </button>
         </div>

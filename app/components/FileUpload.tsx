@@ -51,13 +51,7 @@ export default function FileUpload({
   return (
     <div>
       <div 
-        style={{
-          border: `2px dashed ${dragActive ? '#3b82f6' : '#ccc'}`,
-          borderRadius: '8px',
-          padding: '16px',
-          textAlign: 'center',
-          backgroundColor: dragActive ? '#eff6ff' : 'transparent'
-        }}
+        className={`border-2 border-dashed rounded-lg p-4 text-center transition ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
@@ -66,18 +60,16 @@ export default function FileUpload({
         <input 
           type="file" 
           id={`upload-${type}`} 
-          style={{ display: 'none' }}
+          className="hidden"
           accept={type === 'audio' ? 'audio/*' : 'image/*'}
           onChange={e => e.target.files?.[0] && upload(e.target.files[0])} 
         />
-        <label htmlFor={`upload-${type}`} style={{ cursor: 'pointer', color: '#3b82f6' }}>
+        <label htmlFor={`upload-${type}`} className="cursor-pointer text-blue-600">
           {uploading ? 'Загрузка...' : (label || (type === 'cover' ? 'Загрузить обложку' : 'Загрузить аудио'))}
         </label>
-        <p style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-          или перетащите файл сюда
-        </p>
+        <p className="text-xs text-gray-500 mt-2">или перетащите файл сюда</p>
       </div>
-      {error && <p style={{ color: 'red', marginTop: '4px', fontSize: '14px' }}>{error}</p>}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 }

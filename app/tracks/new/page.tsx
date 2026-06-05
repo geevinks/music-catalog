@@ -53,27 +53,27 @@ export default function NewTrackPage() {
   };
 
   return (
-    <div>
-      <h1>Добавить трек</h1>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-lg mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Добавить трек</h1>
+      {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>}
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-4">
         <div>
-          <label>Название трека *</label>
-          <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} />
+          <label className="block font-medium mb-1">Название трека *</label>
+          <input type="text" required className="w-full border p-2 rounded" value={title} onChange={e => setTitle(e.target.value)} />
         </div>
         <div>
-          <label>Альбом *</label>
-          <select required value={albumId} onChange={(e) => setAlbumId(e.target.value)}>
+          <label className="block font-medium mb-1">Альбом *</label>
+          <select required className="w-full border p-2 rounded" value={albumId} onChange={e => setAlbumId(e.target.value)}>
             <option value="">Выберите альбом</option>
             {albums.map(a => <option key={a.id} value={a.id}>{a.title}</option>)}
           </select>
         </div>
         <div>
-          <label>Аудиофайл *</label>
+          <label className="block font-medium mb-1">Аудиофайл *</label>
           <FileUpload type="audio" onUpload={setAudioPath} label="Загрузить MP3" />
-          {audioPath && <audio controls src={audioPath} style={{ marginTop: '8px', width: '100%' }} />}
+          {audioPath && <audio controls src={audioPath} className="w-full mt-2" />}
         </div>
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className="bg-blue-600 text-white px-4 py-2 rounded w-full">
           {loading ? 'Добавление...' : 'Добавить'}
         </button>
       </form>
