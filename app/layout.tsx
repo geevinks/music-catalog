@@ -15,7 +15,7 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <Navigation />
-        <main className="container mx-auto px-4 py-18">
+        <main className="container mx-auto px-4 py-16">
           {children}
         </main>
       </body>

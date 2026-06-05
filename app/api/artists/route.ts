@@ -5,14 +5,10 @@ import crypto from 'crypto';
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '10');
+  const limit = parseInt(searchParams.get('limit') || '5');
   const search = searchParams.get('search') || '';
   
-  let filtered = artists;
-  if (search) {
-    filtered = artists.filter(a => a.name.toLowerCase().includes(search.toLowerCase()));
-  }
-  
+  const filtered = artists.filter(a => !search || a.name.toLowerCase().includes(search.toLowerCase()));
   const items = filtered.slice((page - 1) * limit, page * limit);
   
   return NextResponse.json({
@@ -25,7 +21,6 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  
   if (!body.name || !body.country) {
     return NextResponse.json({ error: 'Имя и страна обязательны' }, { status: 422 });
   }

@@ -9,11 +9,10 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get('search') || '';
   const artistId = searchParams.get('artistId') || '';
   
-  let filtered = albums.filter(a => {
-    const matchSearch = !search || a.title.toLowerCase().includes(search.toLowerCase());
-    const matchArtist = !artistId || a.artistId === artistId;
-    return matchSearch && matchArtist;
-  });
+  const filtered = albums.filter(a => 
+    (!search || a.title.toLowerCase().includes(search.toLowerCase())) &&
+    (!artistId || a.artistId === artistId)
+  );
   
   const itemsWithArtist = filtered.map(a => ({
     ...a,
@@ -32,11 +31,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  
   if (!body.title || !body.releaseYear || !body.genre || !body.artistId) {
     return NextResponse.json({ error: 'Все поля обязательны' }, { status: 422 });
   }
-  
   if (!findArtist(body.artistId)) {
     return NextResponse.json({ error: 'Исполнитель не найден' }, { status: 422 });
   }

@@ -10,24 +10,20 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  
   if (!body.title || !body.albumId || !body.audioPath) {
     return NextResponse.json({ error: 'Все поля обязательны' }, { status: 422 });
   }
-  
   if (!findAlbum(body.albumId)) {
     return NextResponse.json({ error: 'Альбом не найден' }, { status: 422 });
   }
   
-  const newTrack = {
+  addTrack({
     id: crypto.randomUUID(),
     title: body.title,
     albumId: body.albumId,
     audioPath: body.audioPath,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-  };
-  
-  addTrack(newTrack);
-  return NextResponse.json(newTrack, { status: 201 });
+  });
+  return NextResponse.json({ success: true }, { status: 201 });
 }

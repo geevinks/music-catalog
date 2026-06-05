@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { tracks, deleteTrack } from '@/lib/store';
+import { tracks, findTrack, deleteTrack } from '@/lib/store';
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

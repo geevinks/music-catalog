@@ -1,15 +1,7 @@
 'use client';
 import { useState, useCallback } from 'react';
 
-export default function FileUpload({ 
-  type, 
-  onUpload, 
-  label 
-}: { 
-  type: 'cover' | 'audio'; 
-  onUpload: (path: string) => void; 
-  label?: string;
-}) {
+export default function FileUpload({ type, onUpload, label }: { type: 'cover' | 'audio'; onUpload: (path: string) => void; label?: string }) {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState('');
@@ -51,25 +43,21 @@ export default function FileUpload({
   return (
     <div>
       <div 
-        className={`border-2 border-dashed rounded-lg p-4 text-center transition ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
+        className={`border-2 border-dashed rounded-lg p-4 text-center transition ${dragActive ? 'border-gray-600 bg-blue-50' : 'border-gray-400'}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
       >
-        <input 
-          type="file" 
-          id={`upload-${type}`} 
-          className="hidden"
-          accept={type === 'audio' ? 'audio/*' : 'image/*'}
-          onChange={e => e.target.files?.[0] && upload(e.target.files[0])} 
-        />
+        <input type="file" id={`upload-${type}`} className="hidden" accept={type === 'audio' ? 'audio/*' : 'image/*'}
+          onChange={e => e.target.files?.[0] && upload(e.target.files[0])} />
         <label htmlFor={`upload-${type}`} className="cursor-pointer text-blue-600">
-          {uploading ? 'Загрузка...' : (label || (type === 'cover' ? 'Загрузить обложку' : 'Загрузить аудио'))}
+          {uploading ? 'Загрузка...' : (label || (type === 'cover' ? 'Обложка' : 'Аудио'))}
         </label>
-        <p className="text-xs text-gray-500 mt-2">или перетащите файл сюда</p>
       </div>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && (
+        <p className="text-red-500  mt-1">{error}</p>
+      )}
     </div>
   );
 }
