@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎵 Music Catalog
 
-## Getting Started
+> Каталог музыкальных исполнителей, альбомов и треков
 
-First, run the development server:
+---
+
+## 📌 О проекте
+
+Веб-приложение для управления музыкальной коллекцией.  
+Позволяет добавлять, редактировать и удалять **исполнителей**, **альбомы** и **треки**, а также загружать обложки и аудиофайлы.
+
+**Предметная область:** `Исполнитель` → `Альбом` → `Трек` (связь один-ко-многим)
+
+---
+
+## 🧠 Архитектура
+
+**Вариант Б — Fullstack Next.js**
+
+- Фронтенд + бэкенд в одном проекте
+- API через Route Handlers (`app/api/`)
+- Хранилище: in-memory + JSON-файл
+
+✅ Нет проблем с CORS  
+✅ Простой запуск  
+✅ Легко расширяется
+
+---
+
+## 🛠 Технологии
+
+| Назначение | Технология |
+|------------|------------|
+| Фреймворк | Next.js 14+ (App Router) |
+| Язык | TypeScript |
+| Стили | Tailwind CSS |
+| API | Next.js Route Handlers |
+| Хранилище | In-memory + JSON |
+| Запросы | Fetch API |
+
+---
+
+## 🚀 Запуск
 
 ```bash
+git clone https://github.com/geevinks/practica
+cd music-catalog
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Открой http://localhost:3000
 ```
+---
+## 📁 Сущности
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Artist (Исполнитель) — id, name, country, birthYear, isActive
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Album (Альбом) — id, title, releaseYear, genre, artistId, coverPath, isStudio
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Track (Трек) — id, title, albumId, audioPath
 
-## Learn More
+Связи: Artist → Album → Track
 
-To learn more about Next.js, take a look at the following resources:
+## 📡 API
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Исполнители
+GET /api/artists?page=1&limit=5 — список
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+GET /api/artists/:id — один исполнитель + его альбомы
 
-## Deploy on Vercel
+POST /api/artists — создать
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+PATCH /api/artists/:id — обновить
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+DELETE /api/artists/:id — удалить
+
+### Альбомы
+GET /api/albums?page=1&search=&artistId= — список (пагинация, поиск, фильтр)
+
+GET /api/albums/:id — один альбом
+
+POST /api/albums — создать
+
+PATCH /api/albums/:id — обновить
+
+DELETE /api/albums/:id — удалить
+
+### Треки
+GET /api/tracks?albumId=:id — треки альбома
+
+POST /api/tracks — создать
+
+DELETE /api/tracks/:id — удалить
+
+### Загрузка файлов
+POST /api/upload — обложки (image/) и аудио (audio/)
+
+## 📸 Скриншоты
+
+## ✨ Дополнительно (бонусы)
+
+💾 Сохранение в JSON (данные не теряются)
+
+🖼 Загрузка обложек и аудио
+
+🖱 Drag & Drop для файлов
+
+📱 Адаптивный дизайн (бургер-меню)
+
+## 👤 Автор
+Смехов Артём Иванович
+Группа ИСП-9.19 | Специальность 09.02.07

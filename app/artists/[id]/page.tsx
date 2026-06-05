@@ -36,8 +36,8 @@ export default function ArtistDetailPage() {
       if (!res.ok) throw new Error('Не найден');
       const data = await res.json();
       setArtist(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ошибка загрузки');
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ export default function ArtistDetailPage() {
       }
       await fetch(`/api/albums/${albumId}`, { method: 'DELETE' });
       setActiveAlbumId(null);
-      loadArtist(); // перезагружаем данные исполнителя
+      loadArtist();
     }, 200);
   };
 
@@ -116,7 +116,6 @@ export default function ArtistDetailPage() {
                   key={album.id}
                   className="relative rounded overflow-hidden bg-gray-200"
                 >
-                  {/* Красная плашка справа */}
                   <div
                     className="absolute top-0 right-0 h-full pointer-events-none transition-all duration-300"
                     style={{
