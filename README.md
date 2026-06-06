@@ -43,7 +43,7 @@
 ## 🚀 Запуск
 
 ```bash
-git clone https://github.com/geevinks/music-catalog.git
+git clone https://github.com/smehovartm/music-catalog.git
 cd music-catalog
 npm install
 npm run dev
