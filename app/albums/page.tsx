@@ -10,25 +10,44 @@ export default function AlbumsPage() {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [artistId, setArtistId] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [hoveredAlbumId, setHoveredAlbumId] = useState<string | null>(null); // +1
-  const [activeAlbumId, setActiveAlbumId] = useState<string | null>(null); // +1
+  const [hoveredAlbumId, setHoveredAlbumId] = useState<string | null>(null);
+  const [activeAlbumId, setActiveAlbumId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams({ page: String(page), limit: '5', ...(search && { search }), ...(artistId && { artistId }) });
-    const [albumsRes, artistsRes] = await Promise.all([fetch(`/api/albums?${params}`), fetch('/api/artists?limit=100')]);
+    const params = new URLSearchParams({ 
+      page: String(page), 
+      limit: '5', 
+      ...(debouncedSearch && { search: debouncedSearch }), 
+      ...(artistId && { artistId }) 
+    });
+    const [albumsRes, artistsRes] = await Promise.all([
+      fetch(`/api/albums?${params}`), 
+      fetch('/api/artists?limit=100')
+    ]);
     const albumsData = await albumsRes.json();
     const artistsData = await artistsRes.json();
     setAlbums(albumsData.items);
     setTotalPages(albumsData.pages);
     setArtists(artistsData.items);
     setLoading(false);
-  }, [page, search, artistId]);
+  }, [page, debouncedSearch, artistId]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => { 
+    fetchData(); 
+  }, [fetchData]);
 
   const deleteAlbum = async (id: string) => {
     setActiveAlbumId(id);
@@ -46,13 +65,26 @@ export default function AlbumsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Альбомы</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Альбомы</h1>
         <Link href="/albums/new" className="bg-blue-600 text-white px-4 py-2 rounded">+ Новый</Link>
       </div>
 
       <div className="bg-white p-4 rounded shadow mb-6 grid md:grid-cols-2 gap-4">
-        <input type="text" placeholder="Поиск..." className="border text-black p-2 rounded" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
-        <select className="border text-black p-2 rounded" value={artistId} onChange={e => { setArtistId(e.target.value); setPage(1); }}>
+        <input 
+          type="text" 
+          placeholder="Поиск..." 
+          className="border text-black p-2 rounded" 
+          value={search} 
+          onChange={e => setSearch(e.target.value)} 
+        />
+        <select 
+          className="border text-black p-2 rounded" 
+          value={artistId} 
+          onChange={e => { 
+            setArtistId(e.target.value); 
+            setPage(1);
+          }}
+        >
           <option value="">Все исполнители</option>
           {artists.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
         </select>
@@ -69,7 +101,6 @@ export default function AlbumsPage() {
               
               return (
                 <div key={album.id} className="relative rounded overflow-hidden bg-gray-200">
-                  
                   <div
                     className="absolute top-0 right-0 h-full pointer-events-none transition-all duration-300"
                     style={{
@@ -96,7 +127,7 @@ export default function AlbumsPage() {
                         onMouseEnter={() => setHoveredAlbumId(album.id)}
                         onMouseLeave={() => setHoveredAlbumId(null)}
                         onClick={() => deleteAlbum(album.id)} 
-                      className="w-8 h-8 rounded-lg border-gray-300 border bg-gray-200"
+                        className="w-8 h-8 rounded-lg border-gray-300 border bg-gray-200"
                       >
                         🗑️
                       </button>

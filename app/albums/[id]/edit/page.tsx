@@ -65,7 +65,7 @@ export default function EditAlbumPage() {
 
   return (
     <div className="max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Редактирование альбома</h1>
+      <h1 className="text-2xl font-bold mb-4 dark:text-white">Редактирование альбома</h1>
       {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>}
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-4">
         <div><label>Название *</label><input type="text" required className="w-full border p-2 rounded"

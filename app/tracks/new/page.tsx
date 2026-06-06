@@ -32,7 +32,7 @@ export default function NewTrackPage() {
 
   return (
     <div className="max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Добавить трек</h1>
+      <h1 className="text-2xl font-bold mb-4 dark:text-white">Добавить трек</h1>
       <form onSubmit={submit} className="bg-white rounded-lg shadow p-6 space-y-4">
         <input type="text" placeholder="Название трека" required className="w-full border p-2 rounded"
           value={title} onChange={e => setTitle(e.target.value)} />

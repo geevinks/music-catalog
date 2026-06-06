@@ -2,7 +2,7 @@ import HomeCard from '@/app/components/HomeCard';
 
 export default function HomePage() {
   return (
-    <div >
+    <div>
       <section className="max-w-6xl mx-auto py-12 md:py-20 flex flex-col items-center justify-center text-center px-4 bg-black/60 rounded-2xl">
         <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 text-white">
           Музыкальный каталог
@@ -18,12 +18,14 @@ export default function HomePage() {
           title="Исполнители"
           description="Просмотр, добавление и редактирование"
           bgImage="/artists-bg.jpg"
+          showPlus={true}
         />
         <HomeCard
           href="/albums"
           title="Альбомы"
           description="С обложками, поиском и фильтрацией"
           bgImage="/albums-bg.jpg"
+          showPlus={true}
         />
         <HomeCard
           href="/tracks/new"

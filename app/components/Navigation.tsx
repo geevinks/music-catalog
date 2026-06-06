@@ -28,8 +28,18 @@ export default function Navigation() {
 
   const closeMenu = () => setIsOpen(false);
 
-  const isActive = (path: string) => {
-    return pathname === path ? { fontWeight: 'bold', borderBottom: '2px solid #3b82f6' } : {};
+  const isActivePage = (basePath: string) => {
+    if (basePath === '/artists' && (pathname === '/artists' || (pathname.startsWith('/artists/') && pathname !== '/artists/new' && !pathname.includes('/edit')))) {
+      return true;
+    }
+    if (basePath === '/albums' && (pathname === '/albums' || (pathname.startsWith('/albums/') && pathname !== '/albums/new' && !pathname.includes('/edit')))) {
+      return true;
+    }
+    return pathname === basePath;
+  };
+
+  const isFormActive = (basePath: string) => {
+    return pathname === `${basePath}/new` || pathname.includes(`${basePath}/`) && pathname.includes('/edit');
   };
 
   return (
@@ -41,14 +51,24 @@ export default function Navigation() {
             <span className="text-white">Music Catalog</span>
           </Link>
 
-          <nav className="hidden md:flex gap-6">
-            <Link href="/artists" style={{ textDecoration: 'none', color: 'white', padding: '8px 0', ...isActive('/artists') }}>
-              Исполнители
-            </Link>
-            <Link href="/albums" style={{ textDecoration: 'none', color: 'white', padding: '8px 0', ...isActive('/albums') }}>
-              Альбомы
-            </Link>
-            <Link href="/tracks/new" style={{ textDecoration: 'none', color: 'white', padding: '8px 0', ...isActive('/tracks/new') }}>
+          <nav className="hidden md:flex gap-8">
+            <div className="flex flex-col items-center">
+              <Link href="/artists" className={`transition ${isActivePage('/artists') ? 'text-blue-400 font-bold' : 'text-white/80 hover:text-white'}`}>
+                Исполнители
+              </Link>
+              <Link href="/artists/new" className={`text-xs mt-0.5 transition ${isFormActive('/artists') ? 'text-blue-400' : 'text-white/40 hover:text-white/70'}`}>
+                + добавить
+              </Link>
+            </div>
+            <div className="flex flex-col items-center">
+              <Link href="/albums" className={`transition ${isActivePage('/albums') ? 'text-blue-400 font-bold' : 'text-white/80 hover:text-white'}`}>
+                Альбомы
+              </Link>
+              <Link href="/albums/new" className={`text-xs mt-0.5 transition ${isFormActive('/albums') ? 'text-blue-400' : 'text-white/40 hover:text-white/70'}`}>
+                + добавить
+              </Link>
+            </div>
+            <Link href="/tracks/new" className={`transition ${pathname === '/tracks/new' ? 'text-blue-400 font-bold' : 'text-white/80 hover:text-white'}`}>
               Добавить трек
             </Link>
           </nav>
@@ -70,13 +90,23 @@ export default function Navigation() {
         onClick={closeMenu}
       >
         <nav className="flex flex-col items-center justify-center h-full gap-8 text-2xl">
-          <Link href="/artists" className="text-white/80 hover:text-white transition" onClick={closeMenu}>
-            Исполнители
-          </Link>
-          <Link href="/albums" className="text-white/80 hover:text-white transition" onClick={closeMenu}>
-            Альбомы
-          </Link>
-          <Link href="/tracks/new" className="text-white/80 hover:text-white transition" onClick={closeMenu}>
+          <div className="flex items-center gap-3">
+            <Link href="/artists" className={`transition ${isActivePage('/artists') ? 'text-blue-400 font-bold' : 'text-white/80 hover:text-white'}`} onClick={closeMenu}>
+              Исполнители
+            </Link>
+            <Link href="/artists/new" className={`text-lg transition ${isFormActive('/artists') ? 'text-blue-400' : 'text-white/40 hover:text-white/70'}`} onClick={closeMenu}>
+              +
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/albums" className={`transition ${isActivePage('/albums') ? 'text-blue-400 font-bold' : 'text-white/80 hover:text-white'}`} onClick={closeMenu}>
+              Альбомы
+            </Link>
+            <Link href="/albums/new" className={`text-lg transition ${isFormActive('/albums') ? 'text-blue-400' : 'text-white/40 hover:text-white/70'}`} onClick={closeMenu}>
+              +
+            </Link>
+          </div>
+          <Link href="/tracks/new" className={`transition ${pathname === '/tracks/new' ? 'text-blue-400 font-bold' : 'text-white/80 hover:text-white'}`} onClick={closeMenu}>
             Добавить трек
           </Link>
         </nav>
