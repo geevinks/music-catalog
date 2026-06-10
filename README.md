@@ -107,43 +107,38 @@ npm run dev
 
 ### Главная страница
 
-![Главная страница](https://github.com/user-attachments/assets/cc3c5a07-e4cf-4193-a4f5-06d96b3df169)
+![Главная страница](https://github.com/user-attachments/assets/24e36562-2ba5-4ea7-8cff-6c9b55024cb6)
+
 
 ---
 
 ### Все исполнители
 
-![Все исполнители](https://github.com/user-attachments/assets/eae6bd3b-2002-41e7-ba12-0980ab17c702)
+![Все исполнители](https://github.com/user-attachments/assets/3e5d0b03-cdb8-402f-98f5-ecd4a1bade98)
 
 ---
 
 ### Конкретный исполнитель
 
-![Конкретный исполнитель](https://github.com/user-attachments/assets/2a2a97a1-5622-4148-b95a-07f6fac6c277)
+![Конкретный исполнитель](https://github.com/user-attachments/assets/4c339942-8add-42fa-934f-9244dbb76193)
 
 ---
 
 ### Все альбомы
 
-![Все альбомы](https://github.com/user-attachments/assets/7f4a5cbe-532c-4987-96db-a48d32ee63c2)
+![Все альбомы](https://github.com/user-attachments/assets/4588ab18-6641-4af7-bc19-625d135be74c)
 
 ---
 
 ### Конкретный альбом
 
-![Конкретный альбом](https://github.com/user-attachments/assets/108462ec-6fc0-4301-8436-f56877f53125)
+![Конкретный альбом](https://github.com/user-attachments/assets/dc9e8ebc-bfb5-4561-9657-7774d59dc909)
 
 ---
 
 ### Пример одной из форм (создание альбома)
 
-![Форма создания альбома](https://github.com/user-attachments/assets/c06b0474-1b03-43ce-9020-1cad58ca5795)
-
----
-
-### Анимация при наведении на кнопку удаления
-
-![Анимация перед адалением](https://github.com/user-attachments/assets/2ee4d1d7-47d2-4949-b2fb-07cf865aed23)
+![Форма создания альбома](https://github.com/user-attachments/assets/0ef9f8e6-3021-40e4-a589-a3a2cd661195)
 
 ---
 
@@ -168,7 +163,6 @@ npm run dev
 | 🖱 Drag & Drop | Перетаскивание файлов в область загрузки |
 | 📱 Адаптивный дизайн | Бургер-меню на мобильных устройствах |
 | 🔍 Debounce поиска | Оптимизация запросов при вводе текста |
-| 🟥 Красные плашки | Визуальный эффект при удалении записей |
 
 ---
 
