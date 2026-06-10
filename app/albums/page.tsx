@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import ActionButton from '../components/ActionButton';
 
 type Album = { id: string; title: string; releaseYear: number; genre: string; artistName: string; artistId: string; coverPath: string | null; isStudio: boolean };
 type Artist = { id: string; name: string };
@@ -14,8 +15,6 @@ export default function AlbumsPage() {
   const [artistId, setArtistId] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [hoveredAlbumId, setHoveredAlbumId] = useState<string | null>(null);
-  const [activeAlbumId, setActiveAlbumId] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,21 +44,23 @@ export default function AlbumsPage() {
     setLoading(false);
   }, [page, debouncedSearch, artistId]);
 
+  useEffect(() => {
+    if (!loading && page > totalPages && totalPages > 0) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page, loading]);
+
   useEffect(() => { 
     fetchData(); 
   }, [fetchData]);
 
   const deleteAlbum = async (id: string) => {
-    setActiveAlbumId(id);
-    setTimeout(async () => {
-      if (!confirm('Удалить альбом?')) {
-        setActiveAlbumId(null);
-        return;
-      }
-      await fetch(`/api/albums/${id}`, { method: 'DELETE' });
-      setActiveAlbumId(null);
-      fetchData();
-    }, 200);
+    await fetch(`/api/albums/${id}`, { method: 'DELETE' });
+    fetchData();
+  };
+
+  const editAlbum = async (id: string) => {
+    window.location.href = `/albums/${id}/edit`;
   };
 
   return (
@@ -95,21 +96,12 @@ export default function AlbumsPage() {
       {!loading && (
         <>
           <div className="space-y-3">
-            {albums.map(album => {
-              const isHovered = hoveredAlbumId === album.id;
-              const isActive = activeAlbumId === album.id;
-              
-              return (
+            {albums.length === 0 ? (
+              <div className="text-center py-10 text-gray-500">Ничего не найдено</div>
+            ) : (
+              albums.map(album => (
                 <div key={album.id} className="relative rounded overflow-hidden bg-gray-200">
-                  <div
-                    className="absolute top-0 right-0 h-full pointer-events-none transition-all duration-300"
-                    style={{
-                      width: isActive ? '100%' : (isHovered ? '50%' : '0%'),
-                      background: 'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgb(230,30,30) 100%)',
-                    }}
-                  />
-                  
-                  <div className="relative z-10 p-4 flex items-center gap-4">
+                  <div className="p-4 flex items-center gap-4">
                     <div className="w-16 h-16 rounded flex items-center justify-center">
                       {album.coverPath ? (
                         <img src={album.coverPath} alt={album.title} className="w-full h-full object-cover rounded" />
@@ -121,28 +113,40 @@ export default function AlbumsPage() {
                       <Link href={`/albums/${album.id}`} className="font-semibold text-blue-600">{album.title}</Link>
                       <p className="text-sm text-gray-600">{album.artistName} • {album.releaseYear} • {album.genre}</p>
                     </div>
-                    <div className="space-x-2 flex">
-                      <Link href={`/albums/${album.id}/edit`} className="w-8 h-8 rounded-lg border-gray-300 border bg-gray-200 flex items-center justify-center hover:bg-gray-300 duration-200">✏️</Link>
-                      <button 
-                        onMouseEnter={() => setHoveredAlbumId(album.id)}
-                        onMouseLeave={() => setHoveredAlbumId(null)}
-                        onClick={() => deleteAlbum(album.id)} 
-                        className="w-8 h-8 rounded-lg border-gray-300 border bg-gray-200"
-                      >
-                        🗑️
-                      </button>
+                    <div className="flex w-1 items-end flex-col gap-1">
+                      <ActionButton 
+                        type="edit"
+                        onEdit={() => editAlbum(album.id)}
+                      />
+                      <ActionButton 
+                        type="delete"
+                        onDelete={() => deleteAlbum(album.id)}
+                        confirmMessage="Удалить альбом?"
+                      />
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              ))
+            )}
           </div>
           
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-4 mt-6">
-              <button onClick={() => setPage(p => p-1)} disabled={page===1} className="px-4 py-2 bg-gray-200 rounded text-gray-600">Назад</button>
+              <button 
+                onClick={() => setPage(p => p-1)} 
+                disabled={page === 1} 
+                className="px-4 py-2 bg-gray-200 rounded text-gray-600 disabled:opacity-50"
+              >
+                Назад
+              </button>
               <span>{page} / {totalPages}</span>
-              <button onClick={() => setPage(p => p+1)} disabled={page>=totalPages} className="px-4 py-2 bg-gray-200 rounded text-gray-600">Вперёд</button>
+              <button 
+                onClick={() => setPage(p => p+1)} 
+                disabled={page >= totalPages} 
+                className="px-4 py-2 bg-gray-200 rounded text-gray-600 disabled:opacity-50"
+              >
+                Вперёд
+              </button>
             </div>
           )}
         </>

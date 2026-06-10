@@ -37,7 +37,8 @@ export async function POST(request: NextRequest) {
       }
       savePath = path.join(COVERS_DIR, uniqueName);
       urlPath = `/uploads/covers/${uniqueName}`;
-    } else if (type === 'audio') {
+    } 
+    else if (type === 'audio') {
       if (!file.type.startsWith('audio/')) {
         return NextResponse.json({ error: 'Только аудио' }, { status: 400 });
       }

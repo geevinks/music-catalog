@@ -29,10 +29,9 @@ const seedAlbums = [
   { id: '7', title: 'Кукушка', releaseYear: 2015, genre: 'Pop', artistId: '5', coverPath: null, isStudio: true },
   { id: '8', title: 'Ночной гость', releaseYear: 2005, genre: 'Pop', artistId: '5', coverPath: null, isStudio: true },
   { id: '9', title: 'Пьяная любовь', releaseYear: 2017, genre: 'Pop', artistId: '6', coverPath: null, isStudio: true },
-  { id: '10', title: 'В Питере — пить', releaseYear: 2015, genre: 'Rock', artistId: '7', coverPath: null, isStudio: true },
-  { id: '11', title: 'Лесник', releaseYear: 1997, genre: 'Rock', artistId: '8', coverPath: null, isStudio: true },
-  { id: '12', title: 'Прыгну со скалы', releaseYear: 2003, genre: 'Rock', artistId: '8', coverPath: null, isStudio: true },
-  { id: '13', title: 'Владимирский централ', releaseYear: 1996, genre: 'Chanson', artistId: '10', coverPath: null, isStudio: true },
+  { id: '10', title: 'Лесник', releaseYear: 1997, genre: 'Rock', artistId: '8', coverPath: null, isStudio: true },
+  { id: '11', title: 'Прыгну со скалы', releaseYear: 2003, genre: 'Rock', artistId: '8', coverPath: null, isStudio: true },
+  { id: '12', title: 'Владимирский централ', releaseYear: 1996, genre: 'Chanson', artistId: '10', coverPath: null, isStudio: true },
 ];
 // Сиды для треков
 const seedTracks = [

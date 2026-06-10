@@ -19,6 +19,7 @@ export default function HomePage() {
           description="Просмотр, добавление и редактирование"
           bgImage="/artists-bg.jpg"
           showPlus={true}
+          addLabel="исполнителя"
         />
         <HomeCard
           href="/albums"
@@ -26,12 +27,14 @@ export default function HomePage() {
           description="С обложками, поиском и фильтрацией"
           bgImage="/albums-bg.jpg"
           showPlus={true}
+          addLabel="альбом"
         />
         <HomeCard
           href="/tracks/new"
           title="Добавить трек"
           description="Загрузите новый трек в альбом"
           bgImage="/tracks-bg.jpg"
+          addLabel="трек"
         />
       </div>
     </div>

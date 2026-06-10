@@ -1,42 +1,58 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import ActionButton from '../components/ActionButton';
 
 type Artist = { id: string; name: string; country: string; birthYear: number | null; isActive: boolean };
 
 export default function ArtistsPage() {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [hoveredArtistId, setHoveredArtistId] = useState<string | null>(null);
-  const [activeArtistId, setActiveArtistId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const fetchArtists = useCallback(async () => {
     setLoading(true);
-    const res = await fetch(`/api/artists?page=${page}&limit=5`);
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: '5',
+      ...(debouncedSearch && { search: debouncedSearch })
+    });
+    const res = await fetch(`/api/artists?${params}`);
     const data = await res.json();
     setArtists(data.items);
     setTotalPages(data.pages);
     setLoading(false);
-  }, [page]);
+  }, [page, debouncedSearch]);
 
-  useEffect(() => { fetchArtists(); }, [fetchArtists]);
+  useEffect(() => {
+    if (!loading && page > totalPages && totalPages > 0) {
+      setPage(totalPages);
+    }
+  }, [totalPages, page, loading]);
+
+  useEffect(() => {
+    fetchArtists();
+  }, [fetchArtists]);
 
   const deleteArtist = async (id: string) => {
-    setActiveArtistId(id);
-    setTimeout(async () => {
-      if (!confirm('Удалить исполнителя?')) {
-        setActiveArtistId(null);
-        return;
-      }
-      await fetch(`/api/artists/${id}`, { method: 'DELETE' });
-      setActiveArtistId(null);
-      fetchArtists();
-    }, 200);
+    await fetch(`/api/artists/${id}`, { method: 'DELETE' });
+    fetchArtists();
   };
 
-  if (loading) return <div className="text-center py-10">Загрузка...</div>;
+  const editArtist = async (id: string) => {
+    window.location.href = `/artists/${id}/edit`;
+  };
 
   return (
     <div>
@@ -45,53 +61,67 @@ export default function ArtistsPage() {
         <Link href="/artists/new" className="bg-blue-600 text-white px-4 py-2 rounded">+ Новый</Link>
       </div>
 
-      <div className="space-y-3">
-        {artists.map(artist => {
-          const isHovered = hoveredArtistId === artist.id;
-          const isActive = activeArtistId === artist.id;
-          
-          return (
-            <div 
-              key={artist.id} 
-              className="relative rounded overflow-hidden bg-gray-200"
-            >
-              {/* Красная плашка справа */}
-              <div
-                className="absolute top-0 right-0 h-full pointer-events-none transition-all duration-300"
-                style={{
-                  width: isActive ? '100%' : (isHovered ? '50%' : '0%'),
-                  background: 'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgb(230,30,30) 100%)',
-                }}
-              />
-              
-              <div className="relative z-10 p-4 flex justify-between items-center">
-                <div>
-                  <Link href={`/artists/${artist.id}`} className="text-xl font-semibold text-blue-600">{artist.name}</Link>
-                  <p className="text-gray-600">{artist.country} • {artist.isActive ? 'Активен' : 'Не активен'}</p>
-                </div>
-                <div className="space-x-2 flex">
-                  <Link href={`/artists/${artist.id}/edit`} className="w-8 h-8 rounded-lg border-gray-300 border bg-gray-200 flex items-center justify-center hover:bg-gray-300 duration-200">✏️</Link>
-                  <button 
-                    onMouseEnter={() => setHoveredArtistId(artist.id)}
-                    onMouseLeave={() => setHoveredArtistId(null)}
-                    onClick={() => deleteArtist(artist.id)} 
-                    className="w-8 h-8 rounded-lg border-gray-300 border bg-gray-200"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      <div className="bg-white p-4 rounded shadow mb-6">
+        <input
+          type="text"
+          placeholder="Поиск исполнителей..."
+          className="w-full border text-black p-2 rounded"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-4 mt-6">
-          <button onClick={() => setPage(p => p-1)} disabled={page===1} className="px-4 py-2 bg-gray-200 rounded text-gray-600">Назад</button>
-          <span>{page} / {totalPages}</span>
-          <button onClick={() => setPage(p => p+1)} disabled={page>=totalPages} className="px-4 py-2 bg-gray-200 rounded text-gray-600">Вперёд</button>
-        </div>
+      {loading && <div className="text-center py-10">Загрузка...</div>}
+
+      {!loading && (
+        <>
+          <div className="space-y-3">
+            {artists.length === 0 ? (
+              <div className="text-center py-10 text-gray-500">Ничего не найдено</div>
+            ) : (
+              artists.map(artist => (
+                <div key={artist.id} className="relative rounded overflow-hidden bg-gray-200">
+                  <div className="p-4 flex justify-between items-center">
+                    <div>
+                      <Link href={`/artists/${artist.id}`} className="text-xl font-semibold text-blue-600">
+                        {artist.name}
+                      </Link>
+                      <p className="text-gray-600">
+                        {artist.country} • {artist.isActive ? 'Активен' : 'Не активен'}
+                      </p>
+                    </div>
+                    <div className="flex w-1 items-end flex-col gap-1">
+                      <ActionButton type="edit" onEdit={() => editArtist(artist.id)} />
+                      <ActionButton
+                        type="delete"
+                        onDelete={() => deleteArtist(artist.id)}
+                        confirmMessage="Удалить исполнителя?"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 mt-6">
+              <button
+                onClick={() => setPage(p => p - 1)}
+                disabled={page === 1}
+                className="px-4 py-2 bg-gray-200 rounded text-gray-600 disabled:opacity-50">
+                Назад
+              </button>
+              <span>{page} / {totalPages}</span>
+              <button
+                onClick={() => setPage(p => p + 1)}
+                disabled={page >= totalPages}
+                className="px-4 py-2 bg-gray-200 rounded text-gray-600 disabled:opacity-50">
+                Вперёд
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

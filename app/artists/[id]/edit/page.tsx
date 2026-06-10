@@ -50,7 +50,7 @@ export default function EditArtistPage() {
 
   return (
     <div className="max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4 dark:text-white">Редактирование</h1>
+      <h1 className="text-2xl font-bold mb-4 dark:text-white">Редактирование исполнителя</h1>
       {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>}
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-4">
         <div><label>Имя *</label><input type="text" required className="w-full border p-2 rounded"
